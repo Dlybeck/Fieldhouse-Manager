@@ -3,17 +3,28 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 const server = createServer(async (req, res) => {
+    const publicDir = join(process.cwd(), 'public'); // Define the public directory
+    let filePath = join(publicDir, req.url);
+
+    // Default to index.html for root requests
     if (req.url === '/' || req.url === '/index.html') {
-        try {
-            const filePath = join(process.cwd(), 'index.html');
-            const content = await readFile(filePath, 'utf8');
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end(content);
-        } catch (err) {
-            res.writeHead(500, { 'Content-Type': 'text/plain' });
-            res.end('Internal Server Error');
-        }
-    } else {
+        filePath = join(publicDir, 'index.html');
+    }
+
+    try {
+        // Determine file type
+        const ext = filePath.split('.').pop();
+        const contentType = {
+            html: 'text/html',
+            js: 'application/javascript',
+            css: 'text/css',
+        }[ext] || 'text/plain';
+
+        // Read and serve the file
+        const content = await readFile(filePath, 'utf8');
+        res.writeHead(200, { 'Content-Type': contentType });
+        res.end(content);
+    } catch (err) {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('404 Not Found');
     }
@@ -22,6 +33,3 @@ const server = createServer(async (req, res) => {
 server.listen(3000, '127.0.0.1', () => {
     console.log('Listening on http://127.0.0.1:3000');
 });
-
-
-// run with `node server.mjs`
