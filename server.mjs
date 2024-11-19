@@ -7,8 +7,8 @@ const server = createServer(async (req, res) => {
     let filePath = join(publicDir, req.url);
 
     // Default to index.html for root requests
-    if (req.url === '/' || req.url === '/index.html') {
-        filePath = join(publicDir, 'index.html');
+    if (req.url === '/' || req.url === '/signin.html') {
+        filePath = join(publicDir, 'signin.html');
     }
 
     try {
@@ -33,3 +33,10 @@ const server = createServer(async (req, res) => {
 server.listen(3000, '127.0.0.1', () => {
     console.log('Listening on http://127.0.0.1:3000');
 });
+
+app.post('/signingo', (req,res) => {
+
+
+
+    
+})
