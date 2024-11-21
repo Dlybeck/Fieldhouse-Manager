@@ -54,37 +54,38 @@ mongoose.connect(uri);
  * EXAMPLES OF ADDING TO, QUERYING AND DELETING a DATABASE
  */
 
-//Add User
-await User.create({
-    fname: "David",
-    lname: "Lybeck",
-    username: "dlybeck",
-    password: "password123",
-});
+async function addData() {
+    //Add User
+    await User.create({
+        fname: "David",
+        lname: "Lybeck",
+        username: "dlybeck",
+        password: "password123",
+    });
 
-// Add Location
-await Location.create({
-    name: "Gym"
-});
+    // Add Location
+    await Location.create({
+        name: "Gym"
+    });
 
-const user = await User.findOne({ fname: "David" });
-const location = await Location.findOne({ name: "Gym" });
+    const user = await User.findOne({ fname: "David" });
+    const location = await Location.findOne({ name: "Gym" });
 
-//Add Reservation
-await Reservation.create({
-    user: user._id,
-    location: location._id,
-    startTime: new Date(2024, 10, 30, 11, 30, 0),
-    endTime: new Date(2024, 10, 30, 13, 30, 0)
-});
+    //Add Reservation
+    await Reservation.create({
+        user: user._id,
+        location: location._id,
+        startTime: new Date(2024, 10, 30, 11, 30, 0),
+        endTime: new Date(2024, 10, 30, 13, 30, 0)
+    });
 
-//Add the reservation to User and Location as well (to make it doubly linked)
-const reservation = await Reservation.findOne({ user:user });
-user.reservations.push(reservation);
-await user.save();
-location.reservations.push(reservation);
-await location.save();
-
+    //Add the reservation to User and Location as well (to make it doubly linked)
+    const reservation = await Reservation.findOne({ user:user });
+    user.reservations.push(reservation);
+    await user.save();
+    location.reservations.push(reservation);
+    await location.save();
+}
 
 async function viewData() {
     var articles = await User.find({});
@@ -95,11 +96,17 @@ async function viewData() {
     console.log('Current Reservations:', articles);
 }
 
+async function clearData(){
+    //Undo all the additions (clear the database) for the next run
+    await User.deleteMany({});
+    await Location.deleteMany({});
+    await Reservation.deleteMany({});
+}
+
+
+//Add to the current database
+await addData().catch(console.error);
 //View the current database
-viewData().catch(console.error);
-
-
-//Undo all the additions (clear the database) for the next run
-await User.deleteMany({});
-await Location.deleteMany({});
-await Reservation.deleteMany({});
+await viewData().catch(console.error);
+//Delete the current database
+await clearData().catch(console.error);
