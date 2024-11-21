@@ -4,6 +4,8 @@ import { join } from 'node:path';
 
 import mongoose from 'mongoose';
 import Blog from './models/Blog.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const server = createServer(async (req, res) => {
     const publicDir = join(process.cwd(), 'public'); // Define the public directory
@@ -41,15 +43,24 @@ server.listen(3000, '127.0.0.1', () => {
 // })
 
 
+const uri = process.env.URI;
+mongoose.connect(uri);
 
-mongoose.connect("mongodb+srv://dlybeck383:M0ng0PassW0rd@testcluster.gkev5.mongodb.net/?retryWrites=true&w=majority&appName=TestCluster")
+// // Create a new blog post and insert into database
+// const article = await Blog.create({
+//     title: 'Awesome Post!',
+//     slug: 'awesome-post',
+//     published: true,
+//     content: 'This is the best post ever',
+//     tags: ['featured', 'announcement'],
+//   });
+//   console.log(article);
 
-// Create a new blog post and insert into database
-const article = await Blog.create({
-    title: 'Awesome Post!',
-    slug: 'awesome-post',
-    published: true,
-    content: 'This is the best post ever',
-    tags: ['featured', 'announcement'],
-  });
-  console.log(article);
+
+
+// Query the database
+async function viewData() {
+    const articles = await Blog.find({});
+    console.log('Current articles in the database:', articles);
+}
+viewData().catch(console.error);
