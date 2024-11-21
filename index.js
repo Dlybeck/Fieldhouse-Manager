@@ -3,7 +3,9 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import mongoose from 'mongoose';
-import Blog from './models/Blog.js';
+import User from './models/User.js';
+import Location from './models/Location.js';
+import Reservation from './models/Reservation.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -46,21 +48,58 @@ server.listen(3000, '127.0.0.1', () => {
 const uri = process.env.URI;
 mongoose.connect(uri);
 
-// // Create a new blog post and insert into database
-// const article = await Blog.create({
-//     title: 'Awesome Post!',
-//     slug: 'awesome-post',
-//     published: true,
-//     content: 'This is the best post ever',
-//     tags: ['featured', 'announcement'],
-//   });
-//   console.log(article);
 
 
+/**
+ * EXAMPLES OF ADDING TO, QUERYING AND DELETING a DATABASE
+ */
 
-// Query the database
+//Add User
+await User.create({
+    fname: "David",
+    lname: "Lybeck",
+    username: "dlybeck",
+    password: "password123",
+});
+
+// Add Location
+await Location.create({
+    name: "Gym"
+});
+
+const user = await User.findOne({ fname: "David" });
+const location = await Location.findOne({ name: "Gym" });
+
+//Add Reservation
+await Reservation.create({
+    user: user._id,
+    location: location._id,
+    startTime: new Date(2024, 10, 30, 11, 30, 0),
+    endTime: new Date(2024, 10, 30, 13, 30, 0)
+});
+
+//Add the reservation to User and Location as well (to make it doubly linked)
+const reservation = await Reservation.findOne({ user:user });
+user.reservations.push(reservation);
+await user.save();
+location.reservations.push(reservation);
+await location.save();
+
+
 async function viewData() {
-    const articles = await Blog.find({});
-    console.log('Current articles in the database:', articles);
+    var articles = await User.find({});
+    console.log('Current Users:', articles, '\n');
+    articles = await Location.find({});
+    console.log('Current Locations:', articles, '\n');
+    articles = await Reservation.find({});
+    console.log('Current Reservations:', articles);
 }
+
+//View the current database
 viewData().catch(console.error);
+
+
+//Undo all the additions (clear the database) for the next run
+await User.deleteMany({});
+await Location.deleteMany({});
+await Reservation.deleteMany({});
