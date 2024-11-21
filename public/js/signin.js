@@ -14,7 +14,7 @@ document.getElementById('signinform').addEventListener('submit', async (event) =
     };
 
     try{
-        const response = await fetch('/signingo', {
+        const response = await fetch('/s  igningo', {
             method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
