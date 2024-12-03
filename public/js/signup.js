@@ -1,4 +1,5 @@
 import sha256 from 'crypto-js/sha256';
+import User from '../../models/User';
 
 
 document.getElementById('signupform').addEventListener('submit', async function (event) {
@@ -12,6 +13,12 @@ document.getElementById('signupform').addEventListener('submit', async function 
 
     if (!fnameElement || !lnameElement || !usernameElement || !passwordElement || !confirmPasswordElement) {
         console.error('One or more form elements are missing!');
+        return;
+    }
+    
+    const blog = await  User.exists({username: username})
+    if(blog != null){
+        console.error('That username is already taken');
         return;
     }
 
@@ -39,13 +46,12 @@ document.getElementById('signupform').addEventListener('submit', async function 
     };
 
     // create new blog post and insert into database
-    const article = await Blog.create({
+    const article = await User.create({
         fname: fname,
         lname: lname,
         username: username,
         hashedPassword: hashedPassword
     });
 
-    console.log(article);
     
 });
