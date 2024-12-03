@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Form</title>
+</head>
+<body>
+    <h1>Reservation Form</h1>
+    <form action="/submit-reservation" method="POST">
+        <div>
+            <label for="user">User ID:</label>
+            <input type="text" id="user" name="user" required>
+        </div>
+        <div>
+            <label for="location">Location ID:</label>
+            <input type="text" id="location" name="location" required>
+        </div>
+        <div>
+            <label for="startTime">Start Time:</label>
+            <input type="datetime-local" id="startTime" name="startTime" required>
+        </div>
+        <div>
+            <label for="endTime">End Time:</label>
+            <input type="datetime-local" id="endTime" name="endTime" required>
+        </div>
+        <button type="submit">Submit Reservation</button>
+    </form>
+</body>
+</html>
