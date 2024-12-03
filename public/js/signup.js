@@ -1,16 +1,16 @@
 import sha256 from 'crypto-js/sha256';
 
 
-document.getElementById('signupform').addEventListener('submit', function (event) {
+document.getElementById('signupform').addEventListener('submit', async function (event) {
     event.preventDefault(); 
 
     const fname = document.getElementById('firstname').value.trim();
     const lname = document.getElementById('lastname').value.trim(); 
-    const email = document.getElementById('email').value.trim(); 
+    const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim(); 
     const confirm_password = document.getElementById('confirm_password').value.trim(); 
 
-    if (!fnameElement || !lnameElement || !emailElement || !passwordElement || !confirmPasswordElement) {
+    if (!fnameElement || !lnameElement || !usernameElement || !passwordElement || !confirmPasswordElement) {
         console.error('One or more form elements are missing!');
         return;
     }
@@ -28,7 +28,6 @@ document.getElementById('signupform').addEventListener('submit', function (event
     console.log('Form data:', {
         fname, 
         lname, 
-        email, 
         hashedPassword, 
     });
 
@@ -36,19 +35,17 @@ document.getElementById('signupform').addEventListener('submit', function (event
     const formData = {
         fname, 
         lname, 
-        email, 
         hashedPassword, 
     };
 
-    // Send the form data to the server using Fetch API
-    fetch('', { // SET ENDPOINT
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData), // Convert form data object to JSON string
-    })
-        .then(response => response.json()) 
-        .then(data => console.log('Success:', data)) 
-        .catch(error => console.error('Error:', error)); 
+    // create new blog post and insert into database
+    const article = await Blog.create({
+        fname: fname,
+        lname: lname,
+        username: username,
+        hashedPassword: hashedPassword
+    });
+
+    console.log(article);
+    
 });
