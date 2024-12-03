@@ -46,7 +46,7 @@ document.getElementById('signupform').addEventListener('submit', async function 
     };
 
     // create new blog post and insert into database
-    const article = await User.create({
+    const user = await User.create({
         fname: fname,
         lname: lname,
         username: username,
