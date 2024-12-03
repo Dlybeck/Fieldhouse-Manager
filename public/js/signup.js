@@ -50,7 +50,7 @@ document.getElementById('signupform').addEventListener('submit', async function 
         fname: fname,
         lname: lname,
         username: username,
-        hashedPassword: hashedPassword
+        password: hashedPassword
     });
 
     
