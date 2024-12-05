@@ -88,8 +88,8 @@ async function addData() {
 }
 
 async function viewData() {
-    var articles = await User.find({});
-    console.log('Current Users:', articles, '\n');
+    var articles = await User.findOne({fname:'David'});
+    console.log('Current Users:', articles.username, '\n');
     articles = await Location.find({});
     console.log('Current Locations:', articles, '\n');
     articles = await Reservation.find({});
