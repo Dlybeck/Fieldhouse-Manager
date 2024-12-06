@@ -1,112 +1,89 @@
-import { createServer } from 'node:http';
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
-
 import mongoose from 'mongoose';
 import User from './models/User.js';
 import Location from './models/Location.js';
-import Reservation from './models/Reservation.js';
+import Reservation from './models/Reservation.js'; // Import Reservation model
 import dotenv from 'dotenv';
+import express from 'express';
+import bodyParser from 'body-parser';
+import path from 'path';
+
 dotenv.config();
 
-const server = createServer(async (req, res) => {
-    const publicDir = join(process.cwd(), 'public'); // Define the public directory
-    let filePath = join(publicDir, req.url);
+const app = express();
+app.use(bodyParser.json());
 
-    // Default to index.html for root requests
-    if (req.url === '/' || req.url === '/signin.html') {
-        filePath = join(publicDir, 'signin.html');
-    }
+// Serve static files
+app.use(express.static('public'));
 
-    try {
-        // Determine file type
-        const ext = filePath.split('.').pop();
-        const contentType = {
-            html: 'text/html',
-            js: 'application/javascript',
-            css: 'text/css',
-        }[ext] || 'text/plain';
-
-        // Read and serve the file
-        const content = await readFile(filePath, 'utf8');
-        res.writeHead(200, { 'Content-Type': contentType });
-        res.end(content);
-    } catch (err) {
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('404 Not Found');
-    }
+// Serve home.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(path.resolve(), 'public/home.html'));
 });
-
-server.listen(3000, '127.0.0.1', () => {
-    console.log('Listening on http://127.0.0.1:3000');
-});
-
-// app.post('/signingo', (req,res) => {
-// })
-
 
 const uri = process.env.URI;
 mongoose.connect(uri);
 
+// Get entire database
+app.get('/database', async (req, res) => {
+    try {
+        const users = await User.find();
+        const locations = await Location.find();
+        res.json({ users, locations });
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
 
+// Clear database
+app.delete('/database', async (req, res) => {
+    try {
+        await User.deleteMany({});
+        await Location.deleteMany({});
+        res.send('Database cleared');
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
 
-/**
- * EXAMPLES OF ADDING TO, QUERYING AND DELETING a DATABASE
- */
+// Add user
+app.post('/user', async (req, res) => {
+    try {
+        const user = new User(req.body);
+        await user.save();
+        res.status(201).send(user);
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
+});
 
-async function addData() {
-    //Add User
-    await User.create({
-        fname: "David",
-        lname: "Lybeck",
-        username: "dlybeck",
-        password: "password123",
-    });
+// Add location
+app.post('/location', async (req, res) => {
+    try {
+        const location = new Location(req.body);
+        await location.save();
+        res.status(201).send(location);
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
+});
 
-    // Add Location
-    await Location.create({
-        name: "Gym"
-    });
+// Add reservation
+app.post('/submit-reservation', async (req, res) => {
+    const { user, location, startTime, endTime } = req.body;
+    if (!user || !location || !startTime || !endTime) {
+        return res.status(400).send('All fields are required: user, location, startTime, endTime');
+    }
 
-    const user = await User.findOne({ fname: "David" });
-    const location = await Location.findOne({ name: "Gym" });
+    try {
+        const reservation = new Reservation({ user, location, startTime, endTime });
+        await reservation.save();
+        res.status(201).send(reservation);
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
+});
 
-    //Add Reservation
-    await Reservation.create({
-        user: user._id,
-        location: location._id,
-        startTime: new Date(2024, 10, 30, 11, 30, 0),
-        endTime: new Date(2024, 10, 30, 13, 30, 0)
-    });
-
-    //Add the reservation to User and Location as well (to make it doubly linked)
-    const reservation = await Reservation.findOne({ user:user });
-    user.reservations.push(reservation);
-    await user.save();
-    location.reservations.push(reservation);
-    await location.save();
-}
-
-async function viewData() {
-    var articles = await User.findOne({fname:'David'});
-    console.log('Current Users:', articles.username, '\n');
-    articles = await Location.find({});
-    console.log('Current Locations:', articles, '\n');
-    articles = await Reservation.find({});
-    console.log('Current Reservations:', articles);
-}
-
-async function clearData(){
-    //Undo all the additions (clear the database) for the next run
-    await User.deleteMany({});
-    await Location.deleteMany({});
-    await Reservation.deleteMany({});
-}
-
-
-//Add to the current database
-await addData().catch(console.error);
-//View the current database
-await viewData().catch(console.error);
-//Delete the current database
-await clearData().catch(console.error);
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});

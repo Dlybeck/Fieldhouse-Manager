@@ -22,3 +22,18 @@ https://www.mongodb.com/developer/languages/javascript/getting-started-with-mong
     - Page allowing logged in users to create reservations
     - Page allowing logged in users to view reservations
     - Way for admin to change schema?
+
+    12/2/2024
+    - Make sure nobody signing up for reservation can sign up for when it is already established
+    - Outside of closing and opening times
+    - Use attribute 'username' as super key to identify user who is making reservation
+
+    12/4/2024
+    1. Get entire database 
+    2. Clear DB
+    3. AddUser 
+    4. AddLocation
+    5. ClearDB
+
+    - Also index.js needs to be changed to an express server for easier compatibility
+
