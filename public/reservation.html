@@ -10,11 +10,19 @@
     <form action="/submit-reservation" method="POST">
         <div>
             <label for="user">User ID:</label>
-            <input type="text" id="user" name="user" required>
+            <select name = "user" id="user">
+                <option value="test 1">test 1</option>
+                <option value="test 2">test 2</option>
+                <option value="test 3">test 3</option>
+            </select>
         </div>
         <div>
             <label for="location">Location ID:</label>
-            <input type="text" id="location" name="location" required>
+            <select name = "location" id = "location"> 
+                <option value="loc 1">Loc 1</option>
+                <option value="loc 2">Loc 2</option>
+                <option value="loc 3">Loc 3</option>
+            </select>
         </div>
         <div>
             <label for="startTime">Start Time:</label>
