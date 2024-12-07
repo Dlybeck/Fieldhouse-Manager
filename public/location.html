@@ -6,19 +6,20 @@
     <title>Reservation Form</title>
 </head>
 <body>
-    <h1>Reservation Form</h1>
-    <form action="/submit-reservation" method="POST">
+    <script src="js/addlocation.js"></script>
+    <h1>Location Form</h1>
+    <form id="locationForm">
         <div>
-            <label for="user">Location Name:</label>
-            <input type="text" id="user" name="user" required>
+            <label>Location Name:</label>
+            <input type="text" id="locationName" name="locationName" required>
         </div>
         <div>
-            <label for="startTime">Open Time:</label>
-            <input type="datetime-local" id="startTime" name="startTime" required>
+            <label>Open Time:</label>
+            <input type="datetime-local" id="openTime" name="openTime" required>
         </div>
         <div>
-            <label for="endTime">Close Time:</label>
-            <input type="datetime-local" id="endTime" name="endTime" required>
+            <label>Close Time:</label>
+            <input type="datetime-local" id="closeTime" name="closeTime" required>
         </div>
         <button type="submit">Submit New Location</button>
         <a href="home.html">Home</a>
