@@ -10,7 +10,9 @@ import path from 'path';
 
 dotenv.config();
 
+
 const app = express();
+app.use('/public', express.static('public'));
 app.use(bodyParser.json());
 
 // Serve static files
@@ -34,6 +36,15 @@ app.get('/database', async (req, res) => {
         res.status(500).send(err.message);
     }
 });
+//get users
+app.get('/users', async (req,res) => {
+    try {
+        const users = await User.find();
+        res.json(users);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+})
 
 // Clear database
 app.delete('/database', async (req, res) => {

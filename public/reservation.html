@@ -10,13 +10,10 @@
     <form action="/submit-reservation" method="POST">
         <div>
             <label for="user">User ID:</label>
-            <select name = "user" id="user">
-                <option value="test 1">test 1</option>
-                <option value="test 2">test 2</option>
-                <option value="test 3">test 3</option>
-            </select>
+            <select name = "user" id="user"></select>
+            <script src = "/public/js/getusers.js"></script>
         </div>
-        <div>
+        <div src = '/js/getlocation.js'>
             <label for="location">Location ID:</label>
             <select name = "location" id = "location"> 
                 <option value="loc 1">Loc 1</option>
