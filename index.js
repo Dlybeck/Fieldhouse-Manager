@@ -31,7 +31,8 @@ app.get('/database', async (req, res) => {
     try {
         const users = await User.find();
         const locations = await Location.find();
-        res.json({ users, locations });
+        const reservations = await Reservation.find();
+        res.json({ users, locations, reservations });
     } catch (err) {
         res.status(500).send(err.message);
     }
@@ -82,6 +83,7 @@ app.post('/location', async (req, res) => {
 // Add reservation
 app.post('/submit-reservation', async (req, res) => {
     const { user, location, startTime, endTime } = req.body;
+    console.log("Request Body " + req.body)
     if (!user || !location || !startTime || !endTime) {
         return res.status(400).send('All fields are required: user, location, startTime, endTime');
     }
