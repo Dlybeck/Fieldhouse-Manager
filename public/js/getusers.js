@@ -1,6 +1,40 @@
-fetch('/users')
-  .then(response => response.json())
-  .then(data => {
-    console.log('Users:', data);
-  })
-  .catch(error => console.error('Error fetching items:', error));
+async function getUsers(){
+    try{
+        const response = await fetch('/users');
+        const data = await response.json();
+        console.log('Users:', data);
+
+        return data;
+    } catch (error) {
+        console.error('Error fetching users: ', error);
+    }
+}
+
+async function gotUsers(){
+    const data = await getUsers();
+
+    const dropdown = document.getElementById('user');
+    const names = [];
+    const ids = [];
+    console.log(names.length);
+    for(var i = 0; i < data.length; i++){
+        console.log(data);
+        var flname = "";
+        flname = flname + data[i].fname;
+        flname = flname + " " + data[i].lname;
+        names[i] = flname;
+        ids[i] = data[i]._id
+    }
+    //console.log(names);
+
+    var x = 0;
+    names.forEach(name =>{
+        const option = document.createElement('option');
+        option.textContent = name;
+        option.value = ids[x];
+        dropdown.appendChild(option);
+        x++;
+    })
+}
+
+gotUsers();
