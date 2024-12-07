@@ -43,17 +43,33 @@ document.addEventListener("DOMContentLoaded", () => {
     
     async function displayReservations() {
         var data = await getEverything();  // Wait for getUsers to finish and return the data
-        //await createReservation(data);
-        //Update Data
         data = await getEverything();
     
         let text = "";
     
-        for (let i = 0; i < data.length; i++) {
-            text += data[i];
-            text += data[i];
-            text += data[i] + "<br>";  // Use <br> to create a new line
-        }
+        data.users.forEach(user => {
+            text += user.fname + " " + user.lname + "<br>";
+            text += "&emsp;Reservations:<br>";
+            user.reservations.forEach(reservationID => {
+                //Find the Reservation
+                data.reservations.forEach(reservation => {
+                    if(reservation._id === reservationID){
+                        var locationID = reservation.location;
+                        //Find the location
+                        data.locations.forEach(location => {
+                            if(location._id === locationID){
+                                //Print the location
+                                text += "&emsp;&emsp;" + location.name;
+                            }
+                        });
+                        //Print the start and end time
+                        text += "&emsp;&emsp;" + reservation.startTime;
+                        text += "&emsp;&emsp;" + reservation.endTime + "<br>";
+                    }
+                });
+            });
+            text += "<br>"
+        });
     
         let paragraph = document.getElementById("responses");
         paragraph.innerHTML = text; // Use innerHTML to interpret <br> as actual line breaks
