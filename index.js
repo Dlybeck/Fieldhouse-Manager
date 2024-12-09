@@ -37,6 +37,7 @@ app.get('/database', async (req, res) => {
         res.status(500).send(err.message);
     }
 });
+
 //get users
 app.get('/users', async (req,res) => {
     try {
@@ -46,6 +47,26 @@ app.get('/users', async (req,res) => {
         res.status(500).send(err.message);
     }
 })
+
+app.get('/reservationByUserID', async (req, res) => {
+    try {
+        // Find the user and populate the 'reservations' field
+        const user = await User.findOne({ _id: req.query.userId }).populate('reservations');
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Populate 'user' and 'location' for the reservations
+        const reservations = await Reservation.find({ _id: { $in: user.reservations } })
+            .populate('user') // Populate the user field
+            .populate('location'); // Populate the location field
+
+        res.json(reservations);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
 
 //get locations
 app.get('/locations', async (req,res) => {
@@ -66,6 +87,20 @@ app.get('/reservations', async (req,res) => {
         res.status(500).send(err.message);
     }
 })
+
+//Get all reservations populated
+app.get('/reservations2', async (req, res) => {
+    try {
+        const reservations = await Reservation.find()
+            .populate('user') // Populate the user field to get user details
+            .populate('location'); // Populate the location field to get location details
+
+        res.json(reservations);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
 
 // Clear database
 app.delete('/database', async (req, res) => {

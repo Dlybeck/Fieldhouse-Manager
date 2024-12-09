@@ -1,82 +1,111 @@
-// js/test.js
 document.addEventListener("DOMContentLoaded", () => {
-
-    async function getEverything() { 
-        try {
-            const response = await fetch('/database');
-            const data = await response.json();
-            console.log('Database:', data); // Log the fetched users
-    
-            return data;  // Return the data after it has been fetched
-        } catch (error) {
-            console.error('Error fetching users:', error);
-        }
+    const form = document.getElementById("reservation-form");
+    initializeReservations()
+    async function initializeReservations(){
+        reservations = await fetchAllReservations();
+        displayReservations(reservations);
     }
 
-    async function createReservation(data) { 
-        const reservationData = {
-            user: data.users[0]._id,
-            location: data.locations[0]._id,
-            startTime: "2024-12-07T10:00:00",
-            endTime: "2024-12-07T12:00:00"
-        };
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault(); // Prevent the default form submission behavior
 
+        const user = document.getElementById("user").value;
+        const location = document.getElementById("location").value;
+
+        let reservations = [];
+
+        if (user) {
+            // Fetch all reservations for the selected user
+            console.log("Trying to be specific..")
+            reservations = await fetchReservationsByUser(user);
+        } else {
+            // Fetch all reservations if no user is selected
+            reservations = await fetchAllReservations();
+        }
+
+        console.log("User: " + user)
+
+        if (location) {
+            //Only print reservations with the specified location
+            reservations = reservations.filter((res) => res.location._id === location);
+        }
+
+        reservations.forEach(reservation => {
+            console.log("reservation: " + reservation.user._id)
+        });
+
+        displayReservations(reservations);
+    });
+
+    async function fetchReservationsByUser(userId) {
+        let reservations = [];
         try {
-            const response = await fetch('/submit-reservation', {
-                method: 'POST',
+            const response = await fetch(`/reservationByUserID?userId=${userId}`, {
+                method: "GET",
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json",
                 },
-                body: JSON.stringify(reservationData)
             });
     
             if (!response.ok) {
-                throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
             }
     
-            const result = await response.json();
-            console.log('Reservation submitted successfully:', result);
+            reservations = await response.json();
         } catch (error) {
-            console.error('Failed to submit reservation:', error.message);
+            console.error("Failed to fetch reservations by user:", error.message);
         }
+    
+        return reservations;
     }
-    
-    async function displayReservations() {
-        var data = await getEverything();  // Wait for getUsers to finish and return the data
-        data = await getEverything();
-    
-        let text = "";
-    
-        data.users.forEach(user => {
-            text += user.fname + " " + user.lname + "<br>";
-            text += "&emsp;Reservations:<br>";
-            user.reservations.forEach(reservationID => {
-                //Find the Reservation
-                data.reservations.forEach(reservation => {
-                    if(reservation._id === reservationID){
-                        var locationID = reservation.location;
-                        //Find the location
-                        data.locations.forEach(location => {
-                            if(location._id === locationID){
-                                //Print the location
-                                text += "&emsp;&emsp;" + location.name;
-                            }
-                        });
-                        //Print the start and end time
-                        text += "&emsp;&emsp;" + reservation.startTime;
-                        text += "&emsp;&emsp;" + reservation.endTime + "<br>";
-                    }
-                });
+
+    async function fetchAllReservations() {
+        let reservations = [];
+        try {
+            const response = await fetch(`/reservations2`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
             });
-            text += "<br>"
-        });
-    
-        let paragraph = document.getElementById("responses");
-        paragraph.innerHTML = text; // Use innerHTML to interpret <br> as actual line breaks
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+
+            reservations = await response.json();
+        } catch (error) {
+            console.error("Failed to fetch all reservations:", error.message);
+        }
+
+        return reservations;
     }
+
+    function displayReservations(reservations = []) {
+        const list = document.getElementById("reservation-list");
+        list.innerHTML = ""; // Clear the list before updating
     
+        if (reservations.length === 0) {
+            const emptyMessage = document.createElement("li");
+            emptyMessage.textContent = "No reservations found.";
+            list.appendChild(emptyMessage);
+            return;
+        }
     
-    // Call displayUsers function to fetch and display users
-    displayReservations();
+        reservations.forEach((reservation) => {
+            const listElem = document.createElement("li");
+    
+            var userName = reservation.user ? reservation.user.fname : "Unknown Name";
+            userName += " "
+            userName += reservation.user ? reservation.user.lname : "Unknown Name";
+            const locationName = reservation.location ? reservation.location.name : "Unknown Location";
+            const startTime = reservation ? reservation.startTime : "Unknown Start Time";
+            const endTime = reservation ? reservation.endTime : "Unknown End Time";
+            
+    
+            listElem.innerHTML = `User: ${userName}<br>Location: ${locationName}<br>From ${startTime} to ${endTime}<br>`;
+            list.appendChild(listElem);
+        });
+    }
     
 });

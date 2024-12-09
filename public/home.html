@@ -15,22 +15,24 @@
 
     <p></p>
 
-    <form action="/submit-reservation" method="POST">
+    <form id="reservation-form">
         <div>
             <label for="user">User ID:</label>
-            <select name = "user" id="user"></select>
-            <script src = "/public/js/getusers.js"></script>
+            <select name="user" id="user">
+                <option value="">All Users</option>
+            </select>
+            <script src="/public/js/getusers.js"></script>
         </div>
         <div>
             <label for="location">Location ID:</label>
-            <select name = "location" id = "location"> 
-            <script src = "/public/js/getlocation.js"></script>
+            <select name="location" id="location">
+                <option value="">All Locations</option>
             </select>
+            <script src="/public/js/getlocation.js"></script>
         </div>
-
-        <button type="submit">Submit Reservation</button>
-        <a href="home.html">Home</a>
+        <button type="submit">Update Filter</button>
     </form>
-    <p id="responses"></p>
+    <h2>Reservations:</h2>
+    <ul id="reservation-list"></ul>
 </body>
 </html>
