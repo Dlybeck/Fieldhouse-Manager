@@ -1,14 +1,10 @@
 import mongoose from 'mongoose';
 import User from './models/User.js';
 import Location from './models/Location.js';
-import Reservation from './models/Reservation.js'; // Import Reservation model
-import dotenv from 'dotenv';
+import Reservation from './models/Reservation.js';
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
-
-
-dotenv.config();
 
 
 const app = express();
@@ -23,8 +19,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(path.resolve(), 'public/home.html'));
 });
 
-const uri = process.env.URI;
-mongoose.connect(uri);
+mongoose.connect("mongodb+srv://dlybeck383:M0ng0PassW0rd@testcluster.gkev5.mongodb.net/?retryWrites=true&w=majority&appName=TestCluster");
 
 // Get entire database
 app.get('/database', async (req, res) => {

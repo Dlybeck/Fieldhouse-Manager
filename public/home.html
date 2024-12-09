@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <script src="/js/home.js"></script>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <h1>Home</h1>
 
-    <a href="signin.html">Log Out</a>
-    <a href = 'reservation.html'> Add a Reservation</a>
-    <a href="location.html">Add a Location</a>
-
-    <p></p>
+    <div id="menu">
+        <a href = 'reservation.html'> Add a Reservation</a>
+        <a href="location.html">Add a Location</a>
+    </div>
 
     <form id="reservation-form">
         <div>
@@ -32,7 +32,7 @@
         </div>
         <button type="submit">Update Filter</button>
     </form>
-    <h2>Reservations:</h2>
+    <h3>Reservations:</h4>
     <ul id="reservation-list"></ul>
 </body>
 </html>
