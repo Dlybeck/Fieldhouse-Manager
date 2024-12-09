@@ -3,8 +3,8 @@ const { Schema, model } = mongoose;
 
 const locationSchema = new Schema({
     name: { type: String, required: true },
-    openTime: { type: Date },
-    closeTime: { type: Date },
+    openTime: { type: String },
+    closeTime: { type: String },
     location: { type: String },
     reservations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Reservation' }],
 });
