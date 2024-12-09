@@ -4,6 +4,7 @@ const { Schema, model } = mongoose;
 const userSchema = new Schema({
   fname: { type: String, required: true },
   lname: { type: String, required: true },
+  username: { type: String, required: true },
   reservations: [
     { type: mongoose.Schema.Types.ObjectId, ref: 'Reservation' }
   ]
