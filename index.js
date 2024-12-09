@@ -47,6 +47,26 @@ app.get('/users', async (req,res) => {
     }
 })
 
+//get locations
+app.get('/locations', async (req,res) => {
+    try {
+        const locations = await Location.find();
+        res.json(locations);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+})
+
+//get reservations
+app.get('/reservations', async (req,res) => {
+    try {
+        const reservations = await Reservation.find();
+        res.json(reservations);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+})
+
 // Clear database
 app.delete('/database', async (req, res) => {
     try {

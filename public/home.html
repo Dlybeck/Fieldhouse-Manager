@@ -8,9 +8,29 @@
 </head>
 <body>
     <h1>Home</h1>
+
     <a href="signin.html">Log Out</a>
     <a href = 'reservation.html'> Add a Reservation</a>
     <a href="location.html">Add a Location</a>
+
+    <p></p>
+
+    <form action="/submit-reservation" method="POST">
+        <div>
+            <label for="user">User ID:</label>
+            <select name = "user" id="user"></select>
+            <script src = "/public/js/getusers.js"></script>
+        </div>
+        <div>
+            <label for="location">Location ID:</label>
+            <select name = "location" id = "location"> 
+            <script src = "/public/js/getlocation.js"></script>
+            </select>
+        </div>
+
+        <button type="submit">Submit Reservation</button>
+        <a href="home.html">Home</a>
+    </form>
     <p id="responses"></p>
 </body>
 </html>
