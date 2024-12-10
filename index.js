@@ -18,10 +18,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(path.resolve(), 'public/home.html'));
 });
 
-// Serve user.html
-app.get('/add-user', (req, res) => {
-    res.sendFile(path.join(path.resolve(), 'public/user.html'));
-});
+// // Serve user.html
+// app.get('/add-user', (req, res) => {
+//     res.sendFile(path.join(path.resolve(), 'public/user.html'));
+// });
 
 mongoose.connect("mongodb+srv://dlybeck383:M0ng0PassW0rd@testcluster.gkev5.mongodb.net/?retryWrites=true&w=majority&appName=TestCluster");
 
@@ -110,9 +110,17 @@ app.delete('/database', async (req, res) => {
 });
 
 // Add user
-app.post('/user', async (req, res) => {
+app.post('/submit-user', async (req, res) => {
+    const { fname, lname} = req.body;
+    console.log("submit: " + req.body);
+    if (!fname || !lname) {
+        console.log('All fields are required: fname, lname');
+    }
+
     try {
-        const user = new User(req.body);
+        console.log("HERE")
+        const user = new User({fname, lname});
+        console.log(user)
         await user.save();
         res.status(201).send(user);
     } catch (err) {

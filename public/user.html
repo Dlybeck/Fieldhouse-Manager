@@ -11,12 +11,11 @@
             
             const fname = document.getElementById('fname').value;
             const lname = document.getElementById('lname').value;
-            const username = document.getElementById('username').value;
 
-            const user = { fname, lname, username };
+            const user = { fname, lname };
 
             try {
-                const response = await fetch('/user', {
+                const response = await fetch('/submit-user', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -45,9 +44,6 @@
         
         <label for="lname">Last Name:</label>
         <input type="text" id="lname" name="lname" required><br><br>
-        
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
         
         <button type="submit">Submit</button>
     </form>
