@@ -1,11 +1,10 @@
+import express from 'express';
+import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
+import path from 'path';
 import User from './models/User.js';
 import Location from './models/Location.js';
 import Reservation from './models/Reservation.js';
-import express from 'express';
-import bodyParser from 'body-parser';
-import path from 'path';
-
 
 const app = express();
 app.use('/public', express.static('public'));
@@ -17,6 +16,11 @@ app.use(express.static('public'));
 // Serve home.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(path.resolve(), 'public/home.html'));
+});
+
+// Serve user.html
+app.get('/add-user', (req, res) => {
+    res.sendFile(path.join(path.resolve(), 'public/user.html'));
 });
 
 mongoose.connect("mongodb+srv://dlybeck383:M0ng0PassW0rd@testcluster.gkev5.mongodb.net/?retryWrites=true&w=majority&appName=TestCluster");
@@ -33,28 +37,27 @@ app.get('/database', async (req, res) => {
     }
 });
 
-//get users
-app.get('/users', async (req,res) => {
+// Get users
+app.get('/users', async (req, res) => {
     try {
         const users = await User.find();
         res.json(users);
     } catch (err) {
         res.status(500).send(err.message);
     }
-})
+});
 
+// Get reservations by user ID
 app.get('/reservationByUserID', async (req, res) => {
     try {
-        // Find the user and populate the 'reservations' field
         const user = await User.findOne({ _id: req.query.userId }).populate('reservations');
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Populate 'user' and 'location' for the reservations
         const reservations = await Reservation.find({ _id: { $in: user.reservations } })
-            .populate('user') // Populate the user field
-            .populate('location'); // Populate the location field
+            .populate('user')
+            .populate('location');
 
         res.json(reservations);
     } catch (err) {
@@ -62,40 +65,38 @@ app.get('/reservationByUserID', async (req, res) => {
     }
 });
 
-
-//get locations
-app.get('/locations', async (req,res) => {
+// Get locations
+app.get('/locations', async (req, res) => {
     try {
         const locations = await Location.find();
         res.json(locations);
     } catch (err) {
         res.status(500).send(err.message);
     }
-})
+});
 
-//get reservations
-app.get('/reservations', async (req,res) => {
+// Get reservations
+app.get('/reservations', async (req, res) => {
     try {
         const reservations = await Reservation.find();
         res.json(reservations);
     } catch (err) {
         res.status(500).send(err.message);
     }
-})
+});
 
-//Get all reservations populated
+// Get all reservations populated
 app.get('/reservations2', async (req, res) => {
     try {
         const reservations = await Reservation.find()
-            .populate('user') // Populate the user field to get user details
-            .populate('location'); // Populate the location field to get location details
+            .populate('user')
+            .populate('location');
 
         res.json(reservations);
     } catch (err) {
         res.status(500).send(err.message);
     }
 });
-
 
 // Clear database
 app.delete('/database', async (req, res) => {
@@ -133,7 +134,6 @@ app.post('/location', async (req, res) => {
 // Add reservation
 app.post('/submit-reservation', async (req, res) => {
     const { user, location, startTime, endTime } = req.body;
-    console.log("Request Body " + req.body)
     if (!user || !location || !startTime || !endTime) {
         return res.status(400).send('All fields are required: user, location, startTime, endTime');
     }
