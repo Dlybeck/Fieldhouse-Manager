@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const endTime = reservation ? reservation.endTime : "Unknown End Time";
             
     
-            listElem.innerHTML = `User: ${userName}<br>Location: ${locationName}<br>From ${startTime} to ${endTime}<br>`;
+            listElem.innerHTML = `User: ${userName}<br>Location: ${locationName}<br>From ${startTime} to ${endTime}<br><br>`;
             list.appendChild(listElem);
         });
     }
