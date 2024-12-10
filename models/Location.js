@@ -6,6 +6,7 @@ const locationSchema = new Schema({
     openTime: { type: String },
     closeTime: { type: String },
     location: { type: String },
+    date: { type: String },
     reservations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Reservation' }],
 });
 
