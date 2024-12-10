@@ -133,14 +133,18 @@ app.post('/location', async (req, res) => {
 
 // Add reservation
 app.post('/submit-reservation', async (req, res) => {
-    const { user, location, startTime, endTime } = req.body;
-    if (!user || !location || !startTime || !endTime) {
-        return res.status(400).send('All fields are required: user, location, startTime, endTime');
+    const { user, location, date, startTime, endTime } = req.body;
+    console.log("submit: " + req.body);
+    if (!user || !location || !date || !startTime || !endTime) {
+        console.log('All fields are required: user, location, startTime, endTime');
     }
 
     try {
-        const reservation = new Reservation({ user, location, startTime, endTime });
+        const reservation = new Reservation({ user, location, date, startTime, endTime });
         await reservation.save();
+        const newUser = await User.findOne({_id: user});
+        newUser.reservations.push(reservation._id);
+        newUser.save();
         res.status(201).send(reservation);
     } catch (err) {
         res.status(400).send(err.message);
