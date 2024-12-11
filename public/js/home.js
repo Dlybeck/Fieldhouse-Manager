@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const date = reservation ? reservation.date : "Unknown Date"
             
     
-            listElem.innerHTML = `User: ${userName}<br>Location: ${locationName}<br>From ${startTime} to ${endTime}<br>On ${date}<br><br>`;
+            listElem.innerHTML = `<strong>User</strong>: ${userName}<br><strong>Location</strong>: ${locationName}<br><font size=4><b>${date} from ${startTime} to ${endTime}</b></font><br><br>`;
             list.appendChild(listElem);
         });
     }
