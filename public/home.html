@@ -18,17 +18,22 @@
 
     <form id="reservation-form">
         <div>
-            <label for="user">User ID:</label>
+            <label for="user">User:</label>
             <select name="user" id="user">
                 <option value="">All Users</option>
             </select>
             <script src="/public/js/getusers.js"></script>
         </div>
         <div>
-            <label for="location">Location ID:</label>
+            <label for="location">Location:</label>
             <select name="location" id="location">
                 <option value="">All Locations</option>
             </select>
+            <script src="/public/js/getlocation.js"></script>
+        </div>
+        <div>
+            <label for="date">Date:</label>
+            <input id="dateInput"type="date" value=""/>
             <script src="/public/js/getlocation.js"></script>
         </div>
         <button type="submit">Update Filter</button>

@@ -12,7 +12,6 @@ window.addEventListener("DOMContentLoaded", buttonListener);
                 startTime: document.querySelector('#startTime').value,
                 endTime: document.querySelector('#endTime').value
             }
-            console.log(res);
             let body = JSON.stringify(res);
                let response = await fetch('/submit-reservation', {//go to server to get user info and check existence
                     method: 'POST',

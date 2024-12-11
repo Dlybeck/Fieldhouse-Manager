@@ -113,15 +113,12 @@ app.delete('/database', async (req, res) => {
 // Add user
 app.post('/submit-user', async (req, res) => {
     const { fname, lname} = req.body;
-    console.log("submit: " + req.body);
     if (!fname || !lname) {
         console.log('All fields are required: fname, lname');
     }
 
     try {
-        console.log("HERE")
         const user = new User({fname, lname});
-        console.log(user)
         await user.save();
         res.status(201).send(user);
     } catch (err) {
@@ -143,7 +140,6 @@ app.post('/location', async (req, res) => {
 // Add reservation
 app.post('/submit-reservation', async (req, res) => {
     const { user, location, date, startTime, endTime } = req.body;
-    console.log("submit: " + req.body);
     if (!user || !location || !date || !startTime || !endTime) {
         console.log('All fields are required: user, location, startTime, endTime');
     }

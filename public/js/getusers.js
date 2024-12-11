@@ -2,7 +2,6 @@ async function getUsers(){
     try{
         const response = await fetch('/users');
         const data = await response.json();
-        console.log('Users:', data);
 
         return data;
     } catch (error) {
@@ -16,9 +15,7 @@ async function gotUsers(){
     const dropdown = document.getElementById('user');
     const names = [];
     const ids = [];
-    console.log(names.length);
     for(var i = 0; i < data.length; i++){
-        console.log(data);
         var flname = "";
         flname = flname + data[i].fname;
         flname = flname + " " + data[i].lname;

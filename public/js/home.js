@@ -11,31 +11,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const user = document.getElementById("user").value;
         const location = document.getElementById("location").value;
+        const dateInput = document.getElementById('dateInput').value;
+
+        const formattedDate = formatDate(dateInput)
 
         let reservations = [];
 
         if (user) {
             // Fetch all reservations for the selected user
-            console.log("Trying to be specific..")
             reservations = await fetchReservationsByUser(user);
         } else {
             // Fetch all reservations if no user is selected
             reservations = await fetchAllReservations();
         }
 
-        console.log("User: " + user)
-
         if (location) {
             //Only print reservations with the specified location
             reservations = reservations.filter((res) => res.location._id === location);
         }
 
-        reservations.forEach(reservation => {
-            console.log("reservation: " + reservation.user._id)
-        });
+        if (dateInput) {
+            //Only print reservations with the matching date
+            reservations = reservations.filter((res) => res.date.localeCompare(formattedDate) == 0);
+        }
+
 
         displayReservations(reservations);
     });
+
+
+    function formatDate() {
+        // Get the input value
+        const dateValue = document.getElementById('dateInput').value; // "2024-12-13"
+
+        // Split the date into components
+        const [year, month, day] = dateValue.split('-');
+
+        // Format the string
+        const formattedDate = `${year}-${month}-${day}`;
+
+        // Display the result
+        return formattedDate;
+    }
 
     async function fetchReservationsByUser(userId) {
         let reservations = [];
@@ -101,9 +118,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const locationName = reservation.location ? reservation.location.name : "Unknown Location";
             const startTime = reservation ? reservation.startTime : "Unknown Start Time";
             const endTime = reservation ? reservation.endTime : "Unknown End Time";
+            const date = reservation ? reservation.date : "Unknown Date"
             
     
-            listElem.innerHTML = `User: ${userName}<br>Location: ${locationName}<br>From ${startTime} to ${endTime}<br><br>`;
+            listElem.innerHTML = `User: ${userName}<br>Location: ${locationName}<br>From ${startTime} to ${endTime}<br>On ${date}<br><br>`;
             list.appendChild(listElem);
         });
     }
