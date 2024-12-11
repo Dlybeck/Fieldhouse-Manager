@@ -103,6 +103,7 @@ app.delete('/database', async (req, res) => {
     try {
         await User.deleteMany({});
         await Location.deleteMany({});
+
         res.send('Database cleared');
     } catch (err) {
         res.status(500).send(err.message);
