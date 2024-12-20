@@ -1,10 +1,10 @@
-import express from 'express';
-import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-import path from 'path';
 import User from './models/User.js';
 import Location from './models/Location.js';
 import Reservation from './models/Reservation.js';
+import express from 'express';
+import bodyParser from 'body-parser';
+import path from 'path';
 
 const app = express();
 app.use('/public', express.static('public'));
@@ -18,10 +18,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(path.resolve(), 'public/home.html'));
 });
 
-// // Serve user.html
-// app.get('/add-user', (req, res) => {
-//     res.sendFile(path.join(path.resolve(), 'public/user.html'));
-// });
+// Serve user.html
+app.get('/add-user', (req, res) => {
+    res.sendFile(path.join(path.resolve(), 'public/user.html'));
+});
 
 mongoose.connect("mongodb+srv://dlybeck383:M0ng0PassW0rd@testcluster.gkev5.mongodb.net/?retryWrites=true&w=majority&appName=TestCluster");
 
@@ -103,7 +103,6 @@ app.delete('/database', async (req, res) => {
     try {
         await User.deleteMany({});
         await Location.deleteMany({});
-
         res.send('Database cleared');
     } catch (err) {
         res.status(500).send(err.message);
@@ -111,14 +110,9 @@ app.delete('/database', async (req, res) => {
 });
 
 // Add user
-app.post('/submit-user', async (req, res) => {
-    const { fname, lname} = req.body;
-    if (!fname || !lname) {
-        console.log('All fields are required: fname, lname');
-    }
-
+app.post('/user', async (req, res) => {
     try {
-        const user = new User({fname, lname});
+        const user = new User(req.body);
         await user.save();
         res.status(201).send(user);
     } catch (err) {
@@ -153,6 +147,27 @@ app.post('/submit-reservation', async (req, res) => {
         res.status(201).send(reservation);
     } catch (err) {
         res.status(400).send(err.message);
+    }
+});
+
+// Delete user by fname and lname
+app.delete('/user', async (req, res) => {
+    const { fname, lname } = req.body;
+
+    try {
+        // Find the user by fname and lname and delete
+        const user = await User.findOneAndDelete({ fname, lname });
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        // Delete the user's reservations
+        await Reservation.deleteMany({ user: user._id });
+
+        res.status(200).send('User and their reservations deleted successfully');
+    } catch (err) {
+        res.status(500).send(err.message);
     }
 });
 

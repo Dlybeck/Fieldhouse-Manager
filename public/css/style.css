@@ -1,18 +1,16 @@
-
 body {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: auto;
+    height: 100vh;
     margin: 0;
     overflow: visible;
     background-color: #660000;
     color: #fff;
-    position: relative;
 }
 
-form{
+form {
     display: inline-block;
     flex-direction: column;
     align-items: center;
@@ -23,7 +21,7 @@ form{
     border-radius: 10px;
 }
 
-a{
+a {
     align-items: 0;
     padding: 10px;
     margin: 10px;
@@ -34,15 +32,25 @@ a{
     text-decoration: none;
 }
 
-#menu{
+.back-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 20px;
+    background-color: #4A4F54;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+#menu {
     margin-bottom: 20px;
     display: flex;
 }
 
-#reservation-list{
+#reservation-list {
     display: inline-block;
     flex-direction: column;
-    align-items: left;
+    align-items: center;
     background-color: #fff;
     color: #000000;
     padding: 20px;
@@ -51,11 +59,11 @@ a{
     display: flex;
 }
 
-#reservation-form{
+#reservation-form {
     text-align: center;
 }
 
-input, select{
+input, select {
     padding: 10px;
     margin: 10px;
     border: none;
@@ -64,7 +72,7 @@ input, select{
     cursor: pointer;
 }
 
-button{
+button {
     align-items: 0;
     padding: 10px;
     margin: 10px;
@@ -85,5 +93,32 @@ p {
     color: #000000
 }
 
+.styled-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    color: #000000;
+    padding: 20px;
+    border-color: #000000;
+    border-radius: 10px;
+}
 
+.styled-input {
+    padding: 10px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    cursor: pointer;
+}
 
+.styled-button {
+    padding: 10px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4A4F54;
+    color: #fff;
+    cursor: pointer;
+}
