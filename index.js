@@ -25,6 +25,29 @@ app.get('/', (req, res) => {
 
 mongoose.connect("mongodb+srv://dlybeck383:M0ng0PassW0rd@testcluster.gkev5.mongodb.net/?retryWrites=true&w=majority&appName=TestCluster");
 
+
+
+setInterval(deleteOld, 43200000);
+deleteOld();
+//deletes reservations once the day has passed
+async function deleteOld(){
+    console.log("deleting old reservations");
+    const currentDate = new Date();
+    const reservationsList = [];
+    const reservations = await Reservation.find();
+    //console.log(reservations);
+    for(let i = 0; i < reservations.length; i++){
+        let rez = reservations[i];
+        let fulldate = rez.date + 'T23:59:59';
+        let rezDate = new Date(fulldate);
+        if(currentDate > rezDate){
+            console.log("deleting " + rez);
+            await Reservation.deleteOne({_id: rez._id});
+        }
+    }
+}
+
+
 // Get entire database
 app.get('/database', async (req, res) => {
     try {
