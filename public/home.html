@@ -12,7 +12,7 @@
     <h1>Home</h1>
 
     <div id="menu">
-        <a href = 'reservation.html'> Add a Reservation</a>
+        <a href='reservation.html'>Add a Reservation</a>
         <a href="location.html">Add a Location</a>
         <a href="user.html">Add a User</a>
     </div>
@@ -34,7 +34,7 @@
         </div>
         <div>
             <label for="date">Date:</label>
-            <input id="dateInput"type="date" value=""/>
+            <input id="dateInput" type="date" value=""/>
         </div>
         <button type="submit">Update Filter</button>
     </form>
@@ -42,5 +42,42 @@
     <div id="reservation-list" align="center">
         <ul id="reservation-list" style="list-style-type:none;"></ul>
     </div>
+
+    <h3>Delete User</h3>
+    <form id="delete-user-form" class="styled-form" onsubmit="deleteUser(event)">
+        <label for="deleteFname">First Name:</label>
+        <input type="text" id="deleteFname" name="deleteFname" class="styled-input" required>
+        <label for="deleteLname">Last Name:</label>
+        <input type="text" id="deleteLname" name="deleteLname" class="styled-input" required>
+        <button type="submit" class="styled-button">Delete User</button>
+    </form>
+
+    <script>
+        async function deleteUser(event) {
+            event.preventDefault();
+            const fname = document.getElementById('deleteFname').value;
+            const lname = document.getElementById('deleteLname').value;
+
+            try {
+                const response = await fetch(`/user`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ fname, lname })
+                });
+
+                if (response.ok) {
+                    alert('User and their reservations deleted successfully!');
+                    document.getElementById('delete-user-form').reset();
+                } else {
+                    const errorText = await response.text();
+                    alert('Error: ' + errorText);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+    </script>
 </body>
 </html>
