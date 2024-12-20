@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const endTime = reservation ? reservation.endTime : "Unknown End Time";
             const date = reservation ? reservation.date : "Unknown Date"
             
-            listElem.innerHTML = `<strong><u>User</u></strong>${userName}<br><strong><u>Location</u></strong>${locationName}<br><font size=4><b>${date} from ${startTime} to ${endTime}</b></font>`;
+            listElem.innerHTML = `<strong><u>User:</u></strong> ${userName}<br><strong><u>Location:</u></strong> ${locationName}<br><font size=4><b>${date} from ${startTime} to ${endTime}</b></font>`;
             var delButton = document.createElement("button");
             delButton.className="reservation-delete"
             delButton.id="reservation-delete"

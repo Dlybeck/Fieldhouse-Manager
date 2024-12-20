@@ -183,6 +183,22 @@ app.post('/location', async (req, res) => {
     }
 });
 
+// Add user
+app.post('/submit-user', async (req, res) => {
+    const { fname, lname} = req.body;
+    if (!fname || !lname) {
+        console.log('All fields are required: fname, lname');
+    }
+
+    try {
+        const user = new User({fname, lname});
+        await user.save();
+        res.status(201).send(user);
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
+});
+
 // Add reservation
 app.post('/submit-reservation', async (req, res) => {
     const { user, location, date, startTime, endTime } = req.body;
