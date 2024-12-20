@@ -109,8 +109,16 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
     
-        reservations.forEach((reservation) => {
+        // Sort reservations occurance
+        const sortedReservations = [...reservations].sort((a, b) => {
+            const dateA = new Date(`${a.date} ${a.startTime}`);
+            const dateB = new Date(`${b.date} ${b.startTime}`);
+            return dateA - dateB;
+        });
+    
+        sortedReservations.forEach((reservation) => {
             const listElem = document.createElement("li");
+            listElem.id = "reservation-tile"
     
             var userName = reservation.user ? reservation.user.fname : "Unknown Name";
             userName += " "
@@ -120,10 +128,63 @@ document.addEventListener("DOMContentLoaded", () => {
             const endTime = reservation ? reservation.endTime : "Unknown End Time";
             const date = reservation ? reservation.date : "Unknown Date"
             
-    
-            listElem.innerHTML = `<strong>User</strong>: ${userName}<br><strong>Location</strong>: ${locationName}<br><font size=4><b>${date} from ${startTime} to ${endTime}</b></font><br><br>`;
+            listElem.innerHTML = `<strong><u>User</u></strong>${userName}<br><strong><u>Location</u></strong>${locationName}<br><font size=4><b>${date} from ${startTime} to ${endTime}</b></font>`;
+            var delButton = document.createElement("button");
+            delButton.className="reservation-delete"
+            delButton.id="reservation-delete"
+            delButton.setAttribute("userID", reservation.user._id);
+            delButton.setAttribute("locationID", reservation.location._id);
+            delButton.setAttribute("reservationID", reservation._id);
+            delButton.innerHTML = 'Delete Reservation'
+            delButton.onclick
             list.appendChild(listElem);
+            listElem.appendChild(delButton)
+        });
+    
+        const buttons = document.querySelectorAll(".reservation-delete");
+    
+        // add delete vent listeners to each button
+        buttons.forEach(button => {
+            button.addEventListener('click', async (event) => {
+                const userID = event.target.getAttribute("userID");
+                const reservationID = event.target.getAttribute("reservationID");
+    
+                if (confirm("Delete the reservation?")) {
+                    await deleteReservation(userID, reservationID);
+                    reservations = await fetchAllReservations();
+                    displayReservations(reservations);
+                    alert("Deleted");
+                }
+            });
         });
     }
+
+    async function deleteReservation(userID, reservationID) {
+        try {
+            // creayte query string with all IDs
+            const queryString = new URLSearchParams({
+                userId: userID,
+                reservationId: reservationID,
+            }).toString();
     
+            // Send request
+            const response = await fetch(`/deleteReservation?${queryString}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+    
+            const result = await response.json();
+            console.log("Reservation deleted successfully:", result);
+        } catch (error) {
+            console.error("Failed to delete reservation:", error.message);
+        }
+    }
+    
+
 });
