@@ -47,6 +47,35 @@ app.get('/users', async (req, res) => {
     }
 });
 
+// Delete reservation by IDs
+app.delete('/deleteReservation', async (req, res) => {
+    try {
+        const { userId, reservationId } = req.query;
+
+        // Find the user and remove the specified reservation
+        const user = await User.findOneAndUpdate(
+            { _id: userId },
+            { $pull: { reservations: reservationId } },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Remove the reservation
+        const reservation = await Reservation.findByIdAndDelete(reservationId);
+
+        if (!reservation) {
+            return res.status(404).json({ message: "Reservation not found" });
+        }
+
+        res.json({ message: "Reservation deleted successfully", user, reservation });
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
 // Get reservations by user ID
 app.get('/reservationByUserID', async (req, res) => {
     try {

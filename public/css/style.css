@@ -59,11 +59,11 @@ a {
     display: flex;
 }
 
-#reservation-form {
+#reservation-form{
     text-align: center;
 }
 
-input, select {
+input, select{
     padding: 10px;
     margin: 10px;
     border: none;
